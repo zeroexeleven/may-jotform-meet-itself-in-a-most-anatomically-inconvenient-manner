@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panda Wisdom</title>
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/carousel.css" />
+  <link rel="stylesheet" href="../css/buttons.css" />
+  <link rel="stylesheet" href="../css/print.css" />
+</head>
+
+<body class="image-page">
+  <div class="image-shell">
+    <h1 class="title image-title">Panda Wisdom</h1>
+
+    <p class="image-caption">
+      Excerpts from a book by James Norbury.
+    </p>
+
+    <div class="carousel" aria-label="Panda wisdom pages">
+  <div class="carousel-inner" id="carouselInner"></div>
+
+  <!-- per-slide caption -->
+  <div class="slide-caption" id="slideCaption"></div>
+
+      <button class="btn carousel-nav prev" id="prevSlide" type="button" aria-label="Previous page">
+        ‹
+      </button>
+      <button class="btn carousel-nav next" id="nextSlide" type="button" aria-label="Next page">
+        ›
+      </button>
+    
+      <div class="carousel-dots" id="carouselDots" aria-hidden="true"></div>
+    </div>
+
+    <div class="buttons image-actions">
+      <a class="btn" id="closeImage" href="../index.html">Go Back</a>
+    </div>
+  </div>
+
+  <script src="../scripts/panda-wisdom.js"></script>
+</body>
+</html>

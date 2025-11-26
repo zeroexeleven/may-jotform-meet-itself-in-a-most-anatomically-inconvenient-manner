@@ -1,0 +1,129 @@
+/* ===========================
+   SUMMARY PAGE
+   =========================== */
+
+.summary-page .shell {
+  max-width: 900px;
+  width: 100%;
+  background: var(--bg-overlay);
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  padding: 20px 18px 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  text-align: left;
+}
+
+.summary-page .title {
+  text-align: center;
+}
+
+.summary-page .subtitle {
+  margin: 0 0 18px;
+  font-weight: 300;
+  font-size: clamp(14px, 3.4vw, 18px);
+  text-shadow: var(--text-shadow-strong);
+  text-align: center;
+}
+
+.meta {
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 16px;
+}
+
+/* Outer answers container: no inner scrollbars */
+.answers {
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  padding: 0;
+  max-height: none;
+  overflow: visible;
+}
+
+/* Each answer row styled like form cards */
+.answer-row {
+  padding: 10px 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.q-label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #f7f7f7;
+}
+
+.q-value {
+  font-size: 13px;
+  opacity: 0.9;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #d0d5d2;
+}
+
+/* Tables inside summary – dark theme, responsive */
+
+.answers table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  /* IMPORTANT: let browser decide column widths */
+  /* table-layout: fixed;  <-- remove this */
+  background: rgba(0, 0, 0, 0.55) !important;
+  margin-top: 4px !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+}
+
+.answers thead,
+.answers tr:first-child {
+  background: rgba(0, 0, 0, 0.78) !important;
+}
+
+.answers th,
+.answers td {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  padding: 6px 8px !important;
+  font-size: 12px !important;
+  color: #f7f7f7 !important;
+  background: transparent !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+/* Give the text column most of the width and keep emoji column narrow.
+   Works great for your 2-column matrices. */
+
+.answers th:first-child,
+.answers td:first-child {
+  width: 75%;
+}
+
+.answers th:not(:first-child),
+.answers td:not(:first-child) {
+  width: 25%;
+  text-align: center;
+}
+
+.status {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 8px;
+  opacity: 0.8;
+}
+
+/* ===========================
+   SMALL DEVICES
+   =========================== */
+
+@media (max-width: 480px) {
+  .summary-page .shell {
+    padding: 16px 12px 20px;
+  }
+}

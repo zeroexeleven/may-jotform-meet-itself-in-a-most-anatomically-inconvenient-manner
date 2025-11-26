@@ -1,0 +1,135 @@
+/* ===========================
+   IMAGE PAGE + CAROUSEL
+   =========================== */
+
+.image-page .image-shell {
+  max-width: 900px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  padding: 20px 18px 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  text-align: center;
+}
+
+.image-title {
+  margin-bottom: 10px;
+}
+
+.image-caption {
+  font-size: 13px;
+  opacity: 0.85;
+  margin: 0 0 10px;
+}
+
+/* Carousel shell */
+
+.carousel {
+  position: relative;
+  margin-top: 8px;
+}
+
+.carousel-inner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+  min-height: 200px; /* avoids jumpiness while loading */
+}
+
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateX(10px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.carousel-slide img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 10px;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  position: relative;
+}
+
+/* Carousel navigation buttons */
+
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.carousel-nav.prev {
+  left: 10px;
+}
+
+.carousel-nav.next {
+  right: 10px;
+}
+
+/* Dots */
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.carousel-dot.active {
+  background: #ffffff;
+  transform: scale(1.2);
+}
+
+.slide-caption {
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: 0.85;
+  text-align: center;
+  min-height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Buttons row at bottom of image page */
+
+.image-actions {
+  margin-top: 16px;
+}
+
+/* ===========================
+   SMALL DEVICES
+   =========================== */
+
+@media (max-width: 480px) {
+  .image-page .image-shell {
+    padding: 16px 12px 20px;
+  }
+}

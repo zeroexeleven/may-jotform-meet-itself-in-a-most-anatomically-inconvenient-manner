@@ -1,0 +1,127 @@
+/* ===========================
+   PRINT STYLES
+   =========================== */
+
+@media print {
+
+  /* Page margins */
+  @page {
+    margin: 12mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Flatten the card; full-width printable page */
+  .summary-page .shell,
+  .image-page .image-shell {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: none !important;
+    background: #ffffff !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Top heading */
+  .title {
+    color: #000000 !important;
+    text-shadow: none !important;
+    text-align: center !important;
+    margin: 0 0 4mm !important;
+  }
+
+  .meta {
+    color: #555555 !important;
+    opacity: 1 !important;
+    text-align: center !important;
+    margin-bottom: 6mm !important;
+  }
+
+  /* Answers: simple stacked blocks on white */
+  .answers {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .answer-row {
+    background: #f7f8f7 !important;
+    border-radius: 0 !important;
+    border: 1px solid #d4d8d4 !important;
+    margin: 0 0 3mm !important;
+    padding: 3mm 4mm !important;
+  }
+
+  .q-label {
+    color: #000000 !important;
+    font-weight: 600 !important;
+    margin-bottom: 1mm !important;
+  }
+
+  .q-value {
+    color: #222222 !important;
+  }
+
+  /* Tables: white with greenish header/borders */
+  .answers table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    background: #ffffff !important;
+    margin-top: 1mm !important;
+  }
+
+  .answers thead,
+  .answers tr:first-child {
+    background: #e4eee0 !important;           /* soft green header */
+  }
+
+  .answers th,
+  .answers td {
+    border: 1px solid #5f7c4b !important;     /* green border */
+    padding: 2mm 3mm !important;
+    font-size: 11px !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+
+  .answers th {
+    font-weight: 600 !important;
+    text-align: left !important;
+  }
+
+    /* Keep each question/answer block and table row on the same page */
+  .answer-row,
+  .answer-row * ,
+  .answers table,
+  .answers table tr,
+  .answers table tr * {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Buttons should NOT appear in print */
+  .buttons,
+  .actions,
+  .image-actions {
+    display: none !important;
+  }
+
+  /* Hide any surplus UI visuals if they sneak in */
+  .credit,
+  .image-caption {
+    color: #555555 !important;
+  }
+}
