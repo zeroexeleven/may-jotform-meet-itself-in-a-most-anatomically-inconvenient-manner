@@ -169,12 +169,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Swipe support (touch)
   let touchStartX = null;
+  let touchStartY = null;
+  let isHorizontalSwipe = false;
 
   inner.addEventListener("touchstart", (e) => {
     if (e.touches && e.touches.length === 1) {
       touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isHorizontalSwipe = false;
     }
-  });
+  }, { passive: true });
+
+  inner.addEventListener("touchmove", (e) => {
+    if (touchStartX == null || touchStartY == null) return;
+    
+    const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+    const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+    
+    // If horizontal movement is greater, it's a swipe - prevent scroll
+    if (deltaX > deltaY && deltaX > 10) {
+      isHorizontalSwipe = true;
+      e.preventDefault();
+    }
+  }, { passive: false });
 
   inner.addEventListener("touchend", (e) => {
     if (touchStartX == null) return;
@@ -182,12 +199,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const deltaX = endX - touchStartX;
     const threshold = 40; // px
 
-    if (deltaX > threshold) {
-      prev();
-    } else if (deltaX < -threshold) {
-      next();
+    if (isHorizontalSwipe) {
+      if (deltaX > threshold) {
+        prev();
+      } else if (deltaX < -threshold) {
+        next();
+      }
     }
+    
     touchStartX = null;
+    touchStartY = null;
+    isHorizontalSwipe = false;
   });
 
   // Mouse drag swipe (simple) - only on carousel inner, not buttons

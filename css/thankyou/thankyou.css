@@ -2,6 +2,13 @@
    THANK-YOU PAGE
    =========================== */
 
+.thankyou-page {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
 .thankyou-page .content {
   max-width: 700px;
   width: 100%;
@@ -71,8 +78,13 @@
     justify-items: center;
   }
 
+  .thankyou-buttons .button-stack {
+    order: 1;
+  }
+
   .thankyou-buttons .panda-button {
     justify-self: center;
+    order: 2;
   }
 }
 
