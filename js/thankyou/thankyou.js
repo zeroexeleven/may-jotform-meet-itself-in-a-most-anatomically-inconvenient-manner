@@ -139,6 +139,15 @@ if (pandaBtn) {
       let lastTouchX = 0;
       let lastTouchY = 0;
       let lastTouchTime = 0;
+      let touchMoveHandler = null;
+      
+      document.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 1) {
+          lastTouchX = e.touches[0].clientX;
+          lastTouchY = e.touches[0].clientY;
+          lastTouchTime = Date.now();
+        }
+      });
       
       document.addEventListener("touchmove", (e) => {
         if (e.touches.length !== 1) return;
@@ -147,7 +156,8 @@ if (pandaBtn) {
         const touch = e.touches[0];
         const timeDiff = now - lastTouchTime;
         
-        if (timeDiff > 60 && lastTouchTime > 0) {
+        // Lower throttle for more responsive touch tracking
+        if (timeDiff > 30 && lastTouchTime > 0) {
           const dx = touch.clientX - lastTouchX;
           const dy = touch.clientY - lastTouchY;
           const distance = Math.sqrt(dx * dx + dy * dy);
@@ -159,34 +169,42 @@ if (pandaBtn) {
           const proximity = Math.max(0, 1 - (distanceToButton / maxDistance));
           
           let glintCount = 0;
+          const isOnButton = proximity > 0.75;
           
-          // More glints when moving faster
-          if (touchSpeed > 10) {
+          // Proximity-based logic matching desktop
+          if (isOnButton) {
+            // Very close/on button - always show glints
             glintCount = 2;
-          } else if (touchSpeed > 5) {
+          } else if (proximity > 0.6) {
+            // Close - frequent glints
+            glintCount = Math.random() > 0.3 ? 2 : 1;
+          } else if (proximity > 0.4) {
+            // Medium distance - full effect
             glintCount = 1;
-          }
-          
-          // Proximity boost
-          if (proximity > 0.6) {
-            glintCount += 1;
-          } else if (proximity > 0.3) {
+            if (touchSpeed > 5) glintCount += 1;
+          } else if (proximity > 0.2) {
+            // Getting farther - more glints to guide
+            glintCount = 1;
             if (Math.random() > 0.5) glintCount += 1;
           } else if (proximity > 0.1) {
-            if (glintCount === 0 && Math.random() > 0.6) glintCount = 1;
+            // Far away - consistent guidance
+            glintCount = Math.random() > 0.4 ? 2 : 1;
+          } else if (touchSpeed > 3) {
+            // Very far - show hints when moving
+            glintCount = 1;
           }
           
           glintCount = Math.min(2, glintCount);
           
           if (glintCount > 0) {
-            burst(glintCount, false);
+            burst(glintCount, isOnButton);
           }
         }
         
         lastTouchX = touch.clientX;
         lastTouchY = touch.clientY;
         lastTouchTime = now;
-      }, { passive: true });
+      });
     }
     
     // Global mouse movement: intensity based on speed and proximity (desktop only)
