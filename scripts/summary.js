@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/<[^>]*>/g, "")
       // normalize &nbsp; to spaces
       .replace(/&nbsp;/gi, " ")
+      // strip other HTML entities
+      .replace(/&[a-z]+;/gi, " ")
       .trim();
 
     return cleaned === "";
@@ -135,6 +137,11 @@ document.addEventListener("DOMContentLoaded", () => {
       let rawAnswer = item.answer;
       let pretty = item.prettyFormat;
 
+      // Skip if no answer property exists at all
+      if (!("answer" in item)) {
+        continue;
+      }
+
       // normalize "fake" empty HTML to truly empty
       if (typeof rawAnswer === "string" && isEmptyHTML(rawAnswer)) {
         rawAnswer = "";
@@ -172,14 +179,45 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
 
         case "control_inline":
+          // Fill-in-the-blank / inline layout: check if there's actual filled-in content
+          // For control_inline, if answer is an object, check if it has meaningful values
+          if (typeof rawAnswer === "object" && rawAnswer !== null && !Array.isArray(rawAnswer)) {
+            // Check if any value in the object has content
+            const hasFilledContent = Object.values(rawAnswer).some(v => 
+              v !== null && v !== undefined && String(v).trim() !== ""
+            );
+            if (!hasFilledContent) {
+              continue; // Skip this field entirely
+            }
+          }
+          
+          // For string answers (HTML), check if all spans contain only whitespace
+          if (typeof rawAnswer === "string" && looksLikeHTML(rawAnswer)) {
+            // Extract all content from span tags (user input fields)
+            const spanMatches = rawAnswer.match(/<span[^>]*>([^<]*)<\/span>/g);
+            if (spanMatches) {
+              const hasAnyContent = spanMatches.some(span => {
+                const content = span.replace(/<[^>]*>/g, "").replace(/&nbsp;/gi, " ").trim();
+                return content !== "";
+              });
+              if (!hasAnyContent) {
+                continue; // Skip if all spans are empty
+              }
+            }
+          }
+          
           // Fill-in-the-blank / inline layout: rely on prettyFormat if it has real content
           if (pretty && hasContent(pretty)) {
             valueDiv.innerHTML = pretty;
           } else if (
             typeof rawAnswer === "string" &&
-            looksLikeHTML(rawAnswer)
+            looksLikeHTML(rawAnswer) &&
+            !isEmptyHTML(rawAnswer)
           ) {
             valueDiv.innerHTML = rawAnswer;
+          } else if (typeof rawAnswer === "object") {
+            // For object answers, format them
+            valueDiv.textContent = formatAnswer(rawAnswer);
           } else {
             valueDiv.textContent = formatAnswer(rawAnswer);
           }
@@ -280,6 +318,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const trimmed = value.replace(/\u00a0/g, " ").trim();
       if (trimmed === "") return false;
       if (isEmptyHTML(value)) return false;
+      // Check for JSON strings that represent empty arrays
+      if (trimmed === '[""]' || trimmed === "[]") return false;
       return true;
     }
 
