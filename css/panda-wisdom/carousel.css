@@ -3,9 +3,8 @@
    =========================== */
 
 .image-page {
+  height: 100vh;
   overflow: hidden;
-  position: fixed;
-  inset: 0;
   touch-action: none;
   -webkit-overflow-scrolling: auto;
 }
