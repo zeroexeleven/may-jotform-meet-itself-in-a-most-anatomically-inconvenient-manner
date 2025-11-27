@@ -156,8 +156,8 @@ if (pandaBtn) {
         const touch = e.touches[0];
         const timeDiff = now - lastTouchTime;
         
-        // Lower throttle for more responsive touch tracking
-        if (timeDiff > 30 && lastTouchTime > 0) {
+        // Much lower throttle for highly responsive touch tracking
+        if (timeDiff > 16 && lastTouchTime > 0) { // ~60fps
           const dx = touch.clientX - lastTouchX;
           const dy = touch.clientY - lastTouchY;
           const distance = Math.sqrt(dx * dx + dy * dy);
@@ -165,33 +165,32 @@ if (pandaBtn) {
           
           // Calculate proximity to button
           const distanceToButton = getDistanceToButton(touch.clientX, touch.clientY);
-          const maxDistance = 600;
+          const maxDistance = 700; // Increased range for earlier detection
           const proximity = Math.max(0, 1 - (distanceToButton / maxDistance));
           
           let glintCount = 0;
-          const isOnButton = proximity > 0.75;
+          const isOnButton = proximity > 0.7; // Slightly lower threshold
           
-          // Proximity-based logic matching desktop
+          // More aggressive proximity-based logic for mobile
           if (isOnButton) {
             // Very close/on button - always show glints
             glintCount = 2;
-          } else if (proximity > 0.6) {
-            // Close - frequent glints
+          } else if (proximity > 0.5) {
+            // Close - very frequent glints
+            glintCount = 2;
+          } else if (proximity > 0.35) {
+            // Medium distance - consistent feedback
             glintCount = Math.random() > 0.3 ? 2 : 1;
-          } else if (proximity > 0.4) {
-            // Medium distance - full effect
-            glintCount = 1;
-            if (touchSpeed > 5) glintCount += 1;
           } else if (proximity > 0.2) {
-            // Getting farther - more glints to guide
-            glintCount = 1;
-            if (Math.random() > 0.5) glintCount += 1;
+            // Getting farther - strong guidance
+            glintCount = Math.random() > 0.4 ? 2 : 1;
           } else if (proximity > 0.1) {
             // Far away - consistent guidance
-            glintCount = Math.random() > 0.4 ? 2 : 1;
-          } else if (touchSpeed > 3) {
-            // Very far - show hints when moving
             glintCount = 1;
+            if (Math.random() > 0.5) glintCount += 1;
+          } else if (distance > 2) {
+            // Very far - show hints when moving
+            glintCount = Math.random() > 0.6 ? 1 : 0;
           }
           
           glintCount = Math.min(2, glintCount);

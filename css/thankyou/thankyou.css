@@ -7,6 +7,9 @@
   overflow: hidden;
   touch-action: none;
   -webkit-overflow-scrolling: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .thankyou-page .content {
