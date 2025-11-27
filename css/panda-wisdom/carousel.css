@@ -20,6 +20,13 @@
   text-align: center;
 }
 
+@media (max-width: 640px) {
+  .image-page .image-shell {
+    padding: 12px 12px 20px;
+    margin-top: -20px;
+  }
+}
+
 .image-title {
   margin-bottom: 10px;
 }

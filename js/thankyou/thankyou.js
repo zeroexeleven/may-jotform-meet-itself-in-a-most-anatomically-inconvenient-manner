@@ -132,7 +132,7 @@ if (pandaBtn) {
       }
     });
     
-    pandaBtn.addEventListener("touchstart", () => burst(4, true));
+
   
     // Touch movement tracking for mobile
     if (isTouchDevice) {
@@ -140,6 +140,59 @@ if (pandaBtn) {
       let lastTouchY = 0;
       let lastTouchTime = 0;
       let touchMoveHandler = null;
+      let touchHoldInterval = null;
+      let isTouchingButton = false;
+      
+      // Helper to check if touch is in edge/corner zones (reduce glints there)
+      function getEdgeDamping(x, y) {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const edgeMargin = Math.min(screenWidth, screenHeight) * 0.15; // 15% edge zone
+        
+        // Calculate distances from edges
+        const distFromLeft = x;
+        const distFromRight = screenWidth - x;
+        const distFromTop = y;
+        const distFromBottom = screenHeight - y;
+        
+        // Find minimum distance to any edge
+        const minEdgeDist = Math.min(distFromLeft, distFromRight, distFromTop, distFromBottom);
+        
+        // If in edge zone, reduce glints (0 = at edge, 1 = outside edge zone)
+        if (minEdgeDist < edgeMargin) {
+          return minEdgeDist / edgeMargin; // Linear falloff from 0 to 1
+        }
+        return 1; // No damping
+      }
+      
+      pandaBtn.addEventListener("touchstart", (e) => {
+        isTouchingButton = true;
+        burst(4, true);
+        
+        // Start continuous dense flashing while holding touch
+        if (touchHoldInterval) clearInterval(touchHoldInterval);
+        touchHoldInterval = setInterval(() => {
+          if (isTouchingButton) {
+            burst(3, true); // Dense, excited flashing
+          }
+        }, 80); // Flash every 80ms
+      });
+      
+      pandaBtn.addEventListener("touchend", () => {
+        isTouchingButton = false;
+        if (touchHoldInterval) {
+          clearInterval(touchHoldInterval);
+          touchHoldInterval = null;
+        }
+      });
+      
+      pandaBtn.addEventListener("touchcancel", () => {
+        isTouchingButton = false;
+        if (touchHoldInterval) {
+          clearInterval(touchHoldInterval);
+          touchHoldInterval = null;
+        }
+      });
       
       document.addEventListener("touchstart", (e) => {
         if (e.touches.length === 1) {
@@ -192,6 +245,12 @@ if (pandaBtn) {
           } else if (distance > 2) {
             // Very far - minimal hints
             glintCount = Math.random() > 0.8 ? 1 : 0;
+          }
+          
+          // Apply edge damping - reduce glints at screen edges/corners
+          const edgeDamping = getEdgeDamping(touch.clientX, touch.clientY);
+          if (edgeDamping < 1 && Math.random() > edgeDamping * 0.7) {
+            glintCount = Math.max(0, glintCount - 1);
           }
           
           glintCount = Math.min(2, glintCount);
