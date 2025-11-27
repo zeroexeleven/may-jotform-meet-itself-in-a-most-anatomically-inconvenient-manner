@@ -171,13 +171,11 @@ if (pandaBtn) {
             // Start continuous dense flashing
             if (nearButtonInterval) clearInterval(nearButtonInterval);
             nearButtonInterval = setInterval(() => {
-              if (isNearButton) {
-                burst(4, true); // High density, high frequency
-              }
+              burst(4, true); // Keep firing regardless of isNearButton flag
             }, 50); // Very fast - 50ms intervals
           }
         }
-      });
+      }, { passive: true });
       
       // Track if finger stays near button during movement
       document.addEventListener("touchmove", (e) => {
@@ -191,9 +189,7 @@ if (pandaBtn) {
             burst(5, true);
             if (nearButtonInterval) clearInterval(nearButtonInterval);
             nearButtonInterval = setInterval(() => {
-              if (isNearButton) {
-                burst(4, true);
-              }
+              burst(4, true);
             }, 50);
           }
           // Stop interval if finger moved away from button area
@@ -204,7 +200,7 @@ if (pandaBtn) {
             }
           }
         }
-      });
+      }, { passive: true });
       
       // Clean up on touch end
       document.addEventListener("touchend", () => {
