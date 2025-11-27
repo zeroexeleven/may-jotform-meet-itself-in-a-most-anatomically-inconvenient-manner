@@ -40,6 +40,13 @@ if (pandaBtn) {
     function makeSpark() {
       const spark = document.createElement("div");
       spark.className = "spark";
+      
+      // Randomly choose between gold and silver
+      if (Math.random() > 0.5) {
+        spark.classList.add("gold");
+      } else {
+        spark.classList.add("silver");
+      }
   
       // much wider size range for more variety
       const minScale = 0.3;   // tiny pinpricks
