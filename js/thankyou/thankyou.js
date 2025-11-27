@@ -76,10 +76,13 @@ if (pandaBtn) {
         spark.style.animation = "sparkTwinkleFast 0.4s ease-out forwards";
       }
   
-      // varied glint sizes from tiny to medium
+      // Non-linear size distribution - favor extremes (tiny and larger)
       const minScale = 0.1;    // tiny pinpricks
       const maxScale = 1.8;    // medium bright glints
-      const scale = minScale + Math.random() * (maxScale - minScale);
+      const rand = Math.random();
+      // Use power distribution to favor extremes
+      const scaleFactor = Math.pow(rand, 0.6); // Exponent < 1 favors smaller values
+      const scale = minScale + scaleFactor * (maxScale - minScale);
       spark.style.transform = `translate(-50%, -50%) scale(${scale})`;
   
       // random position in a bubble around the button (-15%..115%)
