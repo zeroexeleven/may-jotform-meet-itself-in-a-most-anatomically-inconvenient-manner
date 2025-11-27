@@ -56,8 +56,10 @@ if (pandaBtn) {
     let lastMouseX = 0;
     let lastMouseY = 0;
     let mouseSpeed = 0;
+    let isHoveringButton = false;
+    let hoverInterval = null;
   
-    function makeSpark() {
+    function makeSpark(isFast = false) {
       const spark = document.createElement("div");
       spark.className = "spark";
       
@@ -66,6 +68,11 @@ if (pandaBtn) {
         spark.classList.add("gold");
       } else {
         spark.classList.add("silver");
+      }
+      
+      // Fast animation when on button
+      if (isFast) {
+        spark.style.animation = "sparkTwinkleFast 0.4s ease-out forwards";
       }
   
       // varied glint sizes from tiny to medium
@@ -81,12 +88,12 @@ if (pandaBtn) {
       spark.style.top = `${y}%`;
   
       pandaBtn.appendChild(spark);
-      setTimeout(() => spark.remove(), 750);
+      setTimeout(() => spark.remove(), isFast ? 400 : 750);
     }
   
-    function burst(count) {
+    function burst(count, isFast = false) {
       for (let i = 0; i < count; i++) {
-        setTimeout(makeSpark, Math.random() * 150);
+        setTimeout(() => makeSpark(isFast), Math.random() * (isFast ? 80 : 150));
       }
     }
   
@@ -100,9 +107,29 @@ if (pandaBtn) {
       return Math.sqrt(dx * dx + dy * dy);
     }
   
-    // Initial hover effect - half density
-    pandaBtn.addEventListener("mouseenter", () => burst(2));
-    pandaBtn.addEventListener("touchstart", () => burst(3));
+    // Initial hover effect and continuous dense hover flashing
+    pandaBtn.addEventListener("mouseenter", () => {
+      isHoveringButton = true;
+      burst(3, true);
+      
+      // Start continuous dense flashing while hovering
+      if (hoverInterval) clearInterval(hoverInterval);
+      hoverInterval = setInterval(() => {
+        if (isHoveringButton) {
+          burst(3, true); // Dense, consistent flashing
+        }
+      }, 80); // Flash every 80ms for very dense coverage
+    });
+    
+    pandaBtn.addEventListener("mouseleave", () => {
+      isHoveringButton = false;
+      if (hoverInterval) {
+        clearInterval(hoverInterval);
+        hoverInterval = null;
+      }
+    });
+    
+    pandaBtn.addEventListener("touchstart", () => burst(4, true));
   
     // Global mouse movement: intensity based on speed and proximity
     document.addEventListener("mousemove", (e) => {
@@ -142,10 +169,11 @@ if (pandaBtn) {
         }
         
         // Proximity modifies the count - more when far, excited when on button
-        if (proximity > 0.75) {
-          // Very close/on button - excited flashing, always show glints
-          glintCount = 1;
-          if (Math.random() > 0.3) glintCount += 1;
+        const isOnButton = proximity > 0.75;
+        
+        if (isOnButton) {
+          // Very close/on button - urgent flashing, always show glints
+          glintCount = 2; // Always 2 for constant presence
         } else if (proximity > 0.6) {
           // Close - moderate
           if (Math.random() > 0.4) glintCount += 1;
@@ -169,7 +197,7 @@ if (pandaBtn) {
         glintCount = Math.min(2, glintCount);
         
         if (glintCount > 0) {
-          burst(glintCount);
+          burst(glintCount, isOnButton);
         }
         
         lastMouseX = e.clientX;
