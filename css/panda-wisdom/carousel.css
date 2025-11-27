@@ -56,6 +56,10 @@
   max-width: 100%;
   max-height: 70vh;
   border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
 }
 
 .carousel-slide.active {
@@ -82,25 +86,6 @@
 
 .carousel-nav.next {
   right: 10px;
-}
-
-/* Zoom controls */
-
-.zoom-controls {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  gap: 6px;
-  z-index: 10;
-}
-
-.zoom-btn {
-  padding: 6px 12px;
-  font-size: 18px;
-  line-height: 1;
-  min-width: 36px;
-  border-radius: 8px;
 }
 
 /* Dots */
