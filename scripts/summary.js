@@ -55,9 +55,18 @@ document.addEventListener("DOMContentLoaded", () => {
       
       // Extract submitter name/identity from the last field (151)
       const answers = submission.answers || {};
+      let submitterName = null;
       if (answers['151'] && answers['151'].answer) {
-        const submitterName = answers['151'].answer;
+        submitterName = answers['151'].answer;
         metaText.textContent = `contribution by ${submitterName}`;
+      }
+      
+      // Send custom data to Clarity for tracking
+      if (typeof clarity === 'function') {
+        clarity('set', 'submissionId', submissionId);
+        if (submitterName) {
+          clarity('set', 'submitterName', submitterName);
+        }
       }
       
       renderAnswers(submission);
