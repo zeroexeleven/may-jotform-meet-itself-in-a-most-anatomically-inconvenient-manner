@@ -34,7 +34,21 @@
     color: #000000 !important;
     text-shadow: none !important;
     text-align: center !important;
-    margin: 0 0 4mm !important;
+    margin: 0 0 2mm !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  .subtitle {
+    color: #333333 !important;
+    text-shadow: none !important;
+    text-align: center !important;
+    margin: 0 0 2mm !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    font-size: 16px !important;
   }
 
   .meta {
@@ -42,6 +56,10 @@
     opacity: 1 !important;
     text-align: center !important;
     margin-bottom: 6mm !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    font-style: italic !important;
   }
 
   /* Answers: simple stacked blocks on white */
@@ -54,11 +72,12 @@
   }
 
   .answer-row {
-    background: #f7f8f7 !important;
+    background: #ffffff !important;
     border-radius: 0 !important;
-    border: 1px solid #d4d8d4 !important;
-    margin: 0 0 3mm !important;
-    padding: 3mm 4mm !important;
+    border: none !important;
+    border-left: 2px solid #5f7c4b !important;
+    margin: 0 0 4mm !important;
+    padding: 2mm 0 2mm 4mm !important;
   }
 
   .q-label {
