@@ -7,14 +7,17 @@
   width: 100%;
   background: var(--bg-overlay);
   border-radius: 14px;
-  border: 1px solid var(--border-soft);
+  border: 1px solid var(--accent-main);
   padding: 20px 18px 24px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7),
+              0 0 20px var(--accent-glow);
   text-align: left;
 }
 
 .summary-page .title {
   text-align: center;
+  text-shadow: 0 0 12px var(--accent-glow),
+               var(--text-shadow-strong);
 }
 
 .summary-page .subtitle {
@@ -48,6 +51,13 @@
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 3px solid var(--accent-main);
+  transition: border-left-color 0.2s ease;
+}
+
+.answer-row:hover {
+  border-left-color: rgba(95, 124, 75, 1);
+  box-shadow: 0 2px 8px rgba(95, 124, 75, 0.2);
 }
 
 .q-label {
