@@ -52,6 +52,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const submission = data.content;
+      
+      // Extract submitter name/identity from the last field (151)
+      const answers = submission.answers || {};
+      if (answers['151'] && answers['151'].answer) {
+        const submitterName = answers['151'].answer;
+        metaText.textContent = `contribution by ${submitterName}`;
+      }
+      
       renderAnswers(submission);
     } catch (e) {
       metaText.textContent = "Error loading submission.";

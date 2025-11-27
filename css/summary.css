@@ -21,33 +21,53 @@
 
 .summary-page .title {
   text-align: center;
-  text-shadow: 0 0 12px var(--accent-glow),
-               var(--text-shadow-strong);
-  background: rgba(0, 0, 0, 0.55);
-  padding: 12px 20px;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6),
-              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  text-shadow: var(--text-shadow-strong);
+  margin-bottom: 6px;
 }
 
 .summary-page .subtitle {
-  margin: 0 0 18px;
+  margin: 0 0 8px;
   font-weight: 300;
   text-shadow: var(--text-shadow-strong);
   text-align: center;
-  background: rgba(0, 0, 0, 0.45);
-  padding: 8px 16px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5),
-              inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .meta {
   text-align: center;
-  font-size: 13px;
-  opacity: 0.8;
-  margin-bottom: 16px;
+  font-size: 15px;
+  font-weight: 400;
+  font-style: italic;
+  opacity: 0.85;
+  margin-bottom: 0;
+  letter-spacing: 0.02em;
+}
+
+/* Group header elements together visually */
+.summary-page .title,
+.summary-page .subtitle,
+.summary-page .meta {
+  background: rgba(0, 0, 0, 0.5);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.summary-page .title {
+  padding: 14px 20px 8px;
+  border-radius: 8px 8px 0 0;
+}
+
+.summary-page .subtitle {
+  padding: 4px 20px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.summary-page .meta {
+  padding: 6px 20px 12px;
+  border-radius: 0 0 8px 8px;
+  background: rgba(0, 0, 0, 0.4);
+  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* Outer answers container: no inner scrollbars */
