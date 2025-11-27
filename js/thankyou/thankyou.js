@@ -334,8 +334,12 @@ if (pandaBtn) {
     });
     }
   
-    // gentle idle shimmer - half density
-    setInterval(() => burst(2), 3200);
+    // Idle shimmer - more noticeable on mobile
+    if (isTouchDevice) {
+      setInterval(() => burst(3), 2200); // More dense, more frequent on mobile
+    } else {
+      setInterval(() => burst(2), 3200); // Original gentle shimmer on desktop
+    }
   }
 
 });
