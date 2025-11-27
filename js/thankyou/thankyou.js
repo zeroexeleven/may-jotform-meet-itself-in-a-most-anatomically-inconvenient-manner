@@ -163,34 +163,35 @@ if (pandaBtn) {
           const distance = Math.sqrt(dx * dx + dy * dy);
           const touchSpeed = distance / timeDiff * 100;
           
-          // Calculate proximity to button
+          // Calculate proximity to button - scale for screen size
           const distanceToButton = getDistanceToButton(touch.clientX, touch.clientY);
-          const maxDistance = 700; // Increased range for earlier detection
+          // Scale max distance based on screen width (smaller screens = shorter range)
+          const screenWidth = window.innerWidth;
+          const maxDistance = Math.min(450, screenWidth * 0.65); // Much tighter range for mobile
           const proximity = Math.max(0, 1 - (distanceToButton / maxDistance));
           
           let glintCount = 0;
-          const isOnButton = proximity > 0.7; // Slightly lower threshold
+          const isOnButton = proximity > 0.65;
           
-          // More aggressive proximity-based logic for mobile
+          // More dramatic proximity-based logic for mobile with tighter range
           if (isOnButton) {
-            // Very close/on button - always show glints
+            // Very close/on button - intense flashing
             glintCount = 2;
           } else if (proximity > 0.5) {
             // Close - very frequent glints
             glintCount = 2;
           } else if (proximity > 0.35) {
-            // Medium distance - consistent feedback
-            glintCount = Math.random() > 0.3 ? 2 : 1;
-          } else if (proximity > 0.2) {
-            // Getting farther - strong guidance
-            glintCount = Math.random() > 0.4 ? 2 : 1;
-          } else if (proximity > 0.1) {
-            // Far away - consistent guidance
-            glintCount = 1;
-            if (Math.random() > 0.5) glintCount += 1;
+            // Medium distance - noticeable increase
+            glintCount = Math.random() > 0.2 ? 2 : 1;
+          } else if (proximity > 0.22) {
+            // Getting farther - moderate
+            glintCount = Math.random() > 0.45 ? 2 : 1;
+          } else if (proximity > 0.12) {
+            // Far away - sparse guidance
+            glintCount = Math.random() > 0.65 ? 1 : 0;
           } else if (distance > 2) {
-            // Very far - show hints when moving
-            glintCount = Math.random() > 0.6 ? 1 : 0;
+            // Very far - minimal hints
+            glintCount = Math.random() > 0.8 ? 1 : 0;
           }
           
           glintCount = Math.min(2, glintCount);

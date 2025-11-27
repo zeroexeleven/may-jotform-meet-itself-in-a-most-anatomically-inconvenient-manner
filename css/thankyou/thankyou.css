@@ -82,12 +82,12 @@
   }
 
   .thankyou-buttons .button-stack {
-    order: 1;
+    order: 2;
   }
 
   .thankyou-buttons .panda-button {
     justify-self: center;
-    order: 2;
+    order: 1;
   }
 }
 
