@@ -2,27 +2,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // Slides configuration: add more objects to this array for more images
   const slides = [
     {
-      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-the-most-anatomically-inconvenient-manner/master/images/enough_tea_nope.jpeg",
+      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-a-most-anatomically-inconvenient-manner/master/images/enough_tea_nope.jpeg",
       alt: "Photograph of a page from a book by James Norbury: sometimes making someone a cup of tea makes a world of difference.",
       caption: "Dear every kind soul who has gifted me with the peerless pleasure of tea: It was in fact not enough. Please bestow more. I have an astronomical need. Thank you."
     },
     {
-      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-the-most-anatomically-inconvenient-manner/master/images/view_worth_struggle.jpeg",
+      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-a-most-anatomically-inconvenient-manner/master/images/view_worth_struggle.jpeg",
       alt: "Photograph of a page from a book by James Norbury on how hard work and struggle often lead to the most beautiful views.",
       caption: "Hard work and struggle often lead to the most beautiful views."
     },
     {
-      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-the-most-anatomically-inconvenient-manner/master/images/back_to_basics.jpeg",
+      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-a-most-anatomically-inconvenient-manner/master/images/back_to_basics.jpeg",
       alt: "Photograph of a page from a book by James Norbury — backtrack, simply, shift your perspective.",
       caption: "Relation to the KISS principle. Reframe when stuck; go back to when it made sense. Remember your roots — the good parts. Replant the bad parts, obviously, before the remembering."
     },
     {
-      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-the-most-anatomically-inconvenient-manner/master/images/listeners_lovers_learners.jpeg",
+      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-a-most-anatomically-inconvenient-manner/master/images/listeners_lovers_learners.jpeg",
       alt: "Photograph of a page from a book by James Norbury on the value of listening.",
       caption: "The value of listening, the one language of love that people too often forget."
     },
     {
-      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-the-most-anatomically-inconvenient-manner/master/images/more_than_words.jpeg",
+      src: "https://raw.githubusercontent.com/zeroexeleven/may-jotform-meet-itself-in-a-most-anatomically-inconvenient-manner/master/images/more_than_words.jpeg",
       alt: "Photograph of a page from a book by James Norbury on the importance of seeing beyond words.",
       caption: "The importance of understanding beyond words, beyond thoughts, beyond... you get the idea."
     }
