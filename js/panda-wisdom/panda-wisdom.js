@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Track loading state
+  let firstImageLoaded = false;
+  
   // Slides configuration: add more objects to this array for more images
   const slides = [
     {
@@ -50,8 +53,28 @@ document.addEventListener("DOMContentLoaded", () => {
     slideEl.dataset.index = index;
 
     const img = document.createElement("img");
-    img.src = slide.src;
     img.alt = slide.alt || "";
+    
+    // Handle image load
+    img.onload = () => {
+      img.classList.add("img-loaded");
+      if (index === 0 && !firstImageLoaded) {
+        firstImageLoaded = true;
+        inner.classList.add("loaded");
+      }
+    };
+    
+    // Set src after attaching onload
+    img.src = slide.src;
+    
+    // Handle cached images (already loaded)
+    if (img.complete && img.naturalHeight !== 0) {
+      img.classList.add("img-loaded");
+      if (index === 0) {
+        firstImageLoaded = true;
+        inner.classList.add("loaded");
+      }
+    }
 
     slideEl.appendChild(img);
     inner.appendChild(slideEl);
@@ -108,9 +131,18 @@ document.addEventListener("DOMContentLoaded", () => {
     setActive(currentIndex - 1);
   }
 
-  // Init
+  // Init - set first slide active immediately (bypass debounce)
   if (total > 0) {
-    setActive(0);
+    currentIndex = 0;
+    inner.querySelectorAll(".carousel-slide").forEach((slide) => {
+      slide.classList.toggle("active", Number(slide.dataset.index) === 0);
+    });
+    dotsContainer.querySelectorAll(".carousel-dot").forEach((dot) => {
+      dot.classList.toggle("active", Number(dot.dataset.index) === 0);
+    });
+    if (captionEl && slides[0]) {
+      captionEl.textContent = slides[0].caption || "";
+    }
   }
 
   // Button events
