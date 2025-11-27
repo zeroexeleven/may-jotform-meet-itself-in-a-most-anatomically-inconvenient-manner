@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (submissionId && summaryLink) {
     summaryLink.href = `pages/summary.html?id=${encodeURIComponent(submissionId)}`;
+    
+    // Fetch submitter name to personalize page title
+    fetchSubmitterName(submissionId);
   } else if (summaryLink) {
     summaryLink.style.display = "none";
   }
@@ -28,6 +31,23 @@ document.addEventListener("DOMContentLoaded", () => {
   if (editURL && pandaBtn) {
     const currentHref = pandaBtn.getAttribute("href");
     pandaBtn.href = `${currentHref}?edit=${encodeURIComponent(editURL)}`;
+  }
+
+  async function fetchSubmitterName(id) {
+    try {
+      const res = await fetch(`https://jotform-proxy.zeroexeleven.workers.dev/submission?id=${encodeURIComponent(id)}`);
+      const data = await res.json();
+      
+      if (res.ok && data.responseCode === 200) {
+        const answers = data.content.answers || {};
+        if (answers['151'] && answers['151'].answer) {
+          const name = answers['151'].answer;
+          document.title = `Thank You ${name}!`;
+        }
+      }
+    } catch (e) {
+      // Silently fail - keep default title
+    }
   }
 
   /* ===== Panda glints ===== */
@@ -48,9 +68,9 @@ if (pandaBtn) {
         spark.classList.add("silver");
       }
   
-      // much wider size range for more variety
-      const minScale = 0.3;   // tiny pinpricks
-      const maxScale = 2.0;   // big bright glints
+      // varied glint sizes from tiny to medium
+      const minScale = 0.1;    // tiny pinpricks
+      const maxScale = 1.8;    // medium bright glints
       const scale = minScale + Math.random() * (maxScale - minScale);
       spark.style.transform = `translate(-50%, -50%) scale(${scale})`;
   
@@ -80,45 +100,73 @@ if (pandaBtn) {
       return Math.sqrt(dx * dx + dy * dy);
     }
   
-    // Initial hover effect
-    pandaBtn.addEventListener("mouseenter", () => burst(6));
-    pandaBtn.addEventListener("touchstart", () => burst(8));
+    // Initial hover effect - half density
+    pandaBtn.addEventListener("mouseenter", () => burst(2));
+    pandaBtn.addEventListener("touchstart", () => burst(3));
   
     // Global mouse movement: intensity based on speed and proximity
     document.addEventListener("mousemove", (e) => {
       const now = Date.now();
       const timeDiff = now - lastMoveTime;
       
-      if (timeDiff > 80) {
+      // Calculate proximity to button (closer = more glints)
+      const distanceToButton = getDistanceToButton(e.clientX, e.clientY);
+      const maxDistance = 600; // increased range for earlier response
+      const proximity = Math.max(0, 1 - (distanceToButton / maxDistance));
+      
+      // Adaptive throttle - much faster updates when close to button
+      let throttle = 70;
+      if (proximity > 0.7) {
+        throttle = 25; // very frequent when on/near button
+      } else if (proximity > 0.5) {
+        throttle = 35; // frequent when close
+      } else if (proximity > 0.3) {
+        throttle = 50;
+      }
+      
+      if (timeDiff > throttle) {
         // Calculate mouse speed
         const dx = e.clientX - lastMouseX;
         const dy = e.clientY - lastMouseY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         mouseSpeed = distance / timeDiff * 100; // normalize
         
-        // Calculate proximity to button (closer = more glints)
-        const distanceToButton = getDistanceToButton(e.clientX, e.clientY);
-        const maxDistance = 400; // pixels
-        const proximity = Math.max(0, 1 - (distanceToButton / maxDistance));
-        
         // Calculate glint count based on speed and proximity
-        // Speed: 0-2 glints, Proximity: 0-2 glints, combined intelligently
         let glintCount = 0;
         
-        if (mouseSpeed > 10) {
-          glintCount += Math.min(2, Math.floor(mouseSpeed / 10));
-        } else if (mouseSpeed > 5) {
+        // Base speed contribution
+        if (mouseSpeed > 8) {
           glintCount += 1;
+        } else if (mouseSpeed > 4) {
+          if (Math.random() > 0.5) glintCount += 1;
         }
         
-        if (proximity > 0.7) {
-          glintCount += 2;
+        // Proximity modifies the count - more when far, excited when on button
+        if (proximity > 0.75) {
+          // Very close/on button - excited flashing, always show glints
+          glintCount = 1;
+          if (Math.random() > 0.3) glintCount += 1;
+        } else if (proximity > 0.6) {
+          // Close - moderate
+          if (Math.random() > 0.4) glintCount += 1;
         } else if (proximity > 0.4) {
+          // Medium distance - full effect
           glintCount += 1;
+        } else if (proximity > 0.2) {
+          // Getting farther - more glints to guide
+          glintCount += 1;
+          if (Math.random() > 0.5) glintCount += 1;
+        } else if (proximity > 0.1) {
+          // Far away - consistent guidance
+          glintCount = 1;
+          if (Math.random() > 0.4) glintCount += 1;
+        } else {
+          // Very far - still show hints
+          glintCount = 1;
         }
         
-        // Cap at 3 glints per movement to prevent swarm
-        glintCount = Math.min(3, glintCount);
+        // Cap at 2 glints per movement
+        glintCount = Math.min(2, glintCount);
         
         if (glintCount > 0) {
           burst(glintCount);
@@ -130,8 +178,8 @@ if (pandaBtn) {
       }
     });
   
-    // gentle idle shimmer
-    setInterval(() => burst(5), 3200);
+    // gentle idle shimmer - half density
+    setInterval(() => burst(2), 3200);
   }
 
 });
