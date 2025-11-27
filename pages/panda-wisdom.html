@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Panda Wisdom</title>
 
   <link rel="stylesheet" href="../css/base.css" />
@@ -39,6 +39,11 @@
       <button class="btn carousel-nav next" id="nextSlide" type="button" aria-label="Next page">
         ›
       </button>
+      
+      <div class="zoom-controls">
+        <button class="btn zoom-btn" id="zoomOut" type="button" aria-label="Zoom out">−</button>
+        <button class="btn zoom-btn" id="zoomIn" type="button" aria-label="Zoom in">+</button>
+      </div>
     
       <div class="carousel-dots" id="carouselDots" aria-hidden="true"></div>
     </div>
