@@ -58,6 +58,9 @@ if (pandaBtn) {
     let mouseSpeed = 0;
     let isHoveringButton = false;
     let hoverInterval = null;
+    
+    // Detect if touch device
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   
     function makeSpark(isFast = false) {
       const spark = document.createElement("div");
@@ -131,8 +134,64 @@ if (pandaBtn) {
     
     pandaBtn.addEventListener("touchstart", () => burst(4, true));
   
-    // Global mouse movement: intensity based on speed and proximity
-    document.addEventListener("mousemove", (e) => {
+    // Touch movement tracking for mobile
+    if (isTouchDevice) {
+      let lastTouchX = 0;
+      let lastTouchY = 0;
+      let lastTouchTime = 0;
+      
+      document.addEventListener("touchmove", (e) => {
+        if (e.touches.length !== 1) return;
+        
+        const now = Date.now();
+        const touch = e.touches[0];
+        const timeDiff = now - lastTouchTime;
+        
+        if (timeDiff > 60 && lastTouchTime > 0) {
+          const dx = touch.clientX - lastTouchX;
+          const dy = touch.clientY - lastTouchY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const touchSpeed = distance / timeDiff * 100;
+          
+          // Calculate proximity to button
+          const distanceToButton = getDistanceToButton(touch.clientX, touch.clientY);
+          const maxDistance = 600;
+          const proximity = Math.max(0, 1 - (distanceToButton / maxDistance));
+          
+          let glintCount = 0;
+          
+          // More glints when moving faster
+          if (touchSpeed > 10) {
+            glintCount = 2;
+          } else if (touchSpeed > 5) {
+            glintCount = 1;
+          }
+          
+          // Proximity boost
+          if (proximity > 0.6) {
+            glintCount += 1;
+          } else if (proximity > 0.3) {
+            if (Math.random() > 0.5) glintCount += 1;
+          } else if (proximity > 0.1) {
+            if (glintCount === 0 && Math.random() > 0.6) glintCount = 1;
+          }
+          
+          glintCount = Math.min(2, glintCount);
+          
+          if (glintCount > 0) {
+            burst(glintCount, false);
+          }
+        }
+        
+        lastTouchX = touch.clientX;
+        lastTouchY = touch.clientY;
+        lastTouchTime = now;
+      }, { passive: true });
+    }
+    
+    // Global mouse movement: intensity based on speed and proximity (desktop only)
+    if (!isTouchDevice) {
+      document.addEventListener("mousemove", (e) => {
       const now = Date.now();
       const timeDiff = now - lastMoveTime;
       
@@ -205,6 +264,7 @@ if (pandaBtn) {
         lastMoveTime = now;
       }
     });
+    }
   
     // gentle idle shimmer - half density
     setInterval(() => burst(2), 3200);
