@@ -37,7 +37,46 @@
   text-shadow: var(--text-shadow-strong);
 }
 
-/* Panda button must be a positioning context */
+/* ===========================
+   BUTTON LAYOUT / PANDA POSITIONING
+   =========================== */
+
+.thankyou-buttons {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.thankyou-buttons .button-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.thankyou-buttons .panda-button {
+  justify-self: end;
+}
+
+/* Portrait / narrow viewports: keep centered stack */
+@media (max-width: 700px) {
+  .thankyou-buttons {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+    justify-items: center;
+  }
+
+  .thankyou-buttons .panda-button {
+    justify-self: center;
+  }
+}
+
+/* Panda button must be a positioning context for sparkles */
 .panda-button {
   position: relative;
   overflow: visible;
