@@ -32,7 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ===== Panda glints ===== */
 if (pandaBtn) {
-    let lastMoveTime = 0; // throttle global mousemove
+    let lastMoveTime = 0;
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+    let mouseSpeed = 0;
   
     function makeSpark() {
       const spark = document.createElement("div");
@@ -51,32 +54,77 @@ if (pandaBtn) {
       spark.style.top = `${y}%`;
   
       pandaBtn.appendChild(spark);
-      setTimeout(() => spark.remove(), 700);
+      setTimeout(() => spark.remove(), 750);
     }
   
     function burst(count) {
       for (let i = 0; i < count; i++) {
-        setTimeout(makeSpark, Math.random() * 120);
+        setTimeout(makeSpark, Math.random() * 150);
       }
     }
   
-    // Strong effect when directly over the button
-    pandaBtn.addEventListener("mouseenter", () => burst(14));
-    pandaBtn.addEventListener("mousemove", () => burst(4));
-    pandaBtn.addEventListener("touchstart", () => burst(16));
+    // Calculate distance from mouse to button center
+    function getDistanceToButton(mouseX, mouseY) {
+      const rect = pandaBtn.getBoundingClientRect();
+      const buttonCenterX = rect.left + rect.width / 2;
+      const buttonCenterY = rect.top + rect.height / 2;
+      const dx = mouseX - buttonCenterX;
+      const dy = mouseY - buttonCenterY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
   
-    // Global mouse movement: glints appear around the panda
-    document.addEventListener("mousemove", () => {
+    // Initial hover effect
+    pandaBtn.addEventListener("mouseenter", () => burst(6));
+    pandaBtn.addEventListener("touchstart", () => burst(8));
+  
+    // Global mouse movement: intensity based on speed and proximity
+    document.addEventListener("mousemove", (e) => {
       const now = Date.now();
-      // light throttle so we don’t spawn a small galaxy on every pixel
-      if (now - lastMoveTime > 120) {
-        burst(2);
+      const timeDiff = now - lastMoveTime;
+      
+      if (timeDiff > 80) {
+        // Calculate mouse speed
+        const dx = e.clientX - lastMouseX;
+        const dy = e.clientY - lastMouseY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        mouseSpeed = distance / timeDiff * 100; // normalize
+        
+        // Calculate proximity to button (closer = more glints)
+        const distanceToButton = getDistanceToButton(e.clientX, e.clientY);
+        const maxDistance = 400; // pixels
+        const proximity = Math.max(0, 1 - (distanceToButton / maxDistance));
+        
+        // Calculate glint count based on speed and proximity
+        // Speed: 0-2 glints, Proximity: 0-2 glints, combined intelligently
+        let glintCount = 0;
+        
+        if (mouseSpeed > 10) {
+          glintCount += Math.min(2, Math.floor(mouseSpeed / 10));
+        } else if (mouseSpeed > 5) {
+          glintCount += 1;
+        }
+        
+        if (proximity > 0.7) {
+          glintCount += 2;
+        } else if (proximity > 0.4) {
+          glintCount += 1;
+        }
+        
+        // Cap at 3 glints per movement to prevent swarm
+        glintCount = Math.min(3, glintCount);
+        
+        if (glintCount > 0) {
+          burst(glintCount);
+        }
+        
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
         lastMoveTime = now;
       }
     });
   
-    // idle shimmer
-    setInterval(() => burst(8), 2800);
+    // gentle idle shimmer
+    setInterval(() => burst(5), 3200);
   }
 
 });
