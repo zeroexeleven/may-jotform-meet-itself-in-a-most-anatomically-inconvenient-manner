@@ -142,45 +142,101 @@ if (pandaBtn) {
       let lastTouchTime = 0;
       let touchHoldInterval = null;
       let isTouchingButton = false;
+      let isNearButton = false;
+      let nearButtonInterval = null;
       
-      // Button touch hold - urgent "press me!" flashing
+      // Helper to check if touch is on or near button
+      function isTouchNearButton(x, y) {
+        const rect = pandaBtn.getBoundingClientRect();
+        const expandedMargin = 20; // 20px expanded hit area
+        return x >= rect.left - expandedMargin &&
+               x <= rect.right + expandedMargin &&
+               y >= rect.top - expandedMargin &&
+               y <= rect.bottom + expandedMargin;
+      }
+      
+      // Document-level touchstart to detect near-button touches
+      document.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 1) {
+          const touch = e.touches[0];
+          lastTouchX = touch.clientX;
+          lastTouchY = touch.clientY;
+          lastTouchTime = Date.now();
+          
+          // Check if touch is on or near the button
+          if (isTouchNearButton(touch.clientX, touch.clientY)) {
+            isNearButton = true;
+            burst(5, true); // Initial excited burst
+            
+            // Start continuous dense flashing
+            if (nearButtonInterval) clearInterval(nearButtonInterval);
+            nearButtonInterval = setInterval(() => {
+              if (isNearButton) {
+                burst(4, true); // High density, high frequency
+              }
+            }, 50); // Very fast - 50ms intervals
+          }
+        }
+      });
+      
+      // Track if finger stays near button during movement
+      document.addEventListener("touchmove", (e) => {
+        if (e.touches.length === 1) {
+          const touch = e.touches[0];
+          const wasNearButton = isNearButton;
+          isNearButton = isTouchNearButton(touch.clientX, touch.clientY);
+          
+          // Start interval if finger moved into button area
+          if (isNearButton && !wasNearButton) {
+            burst(5, true);
+            if (nearButtonInterval) clearInterval(nearButtonInterval);
+            nearButtonInterval = setInterval(() => {
+              if (isNearButton) {
+                burst(4, true);
+              }
+            }, 50);
+          }
+          // Stop interval if finger moved away from button area
+          else if (!isNearButton && wasNearButton) {
+            if (nearButtonInterval) {
+              clearInterval(nearButtonInterval);
+              nearButtonInterval = null;
+            }
+          }
+        }
+      });
+      
+      // Clean up on touch end
+      document.addEventListener("touchend", () => {
+        isNearButton = false;
+        if (nearButtonInterval) {
+          clearInterval(nearButtonInterval);
+          nearButtonInterval = null;
+        }
+      });
+      
+      document.addEventListener("touchcancel", () => {
+        isNearButton = false;
+        if (nearButtonInterval) {
+          clearInterval(nearButtonInterval);
+          nearButtonInterval = null;
+        }
+      });
+      
+      // Keep button-specific listeners for direct button touches
       pandaBtn.addEventListener("touchstart", (e) => {
         isTouchingButton = true;
-        burst(5, true); // Initial excited burst
-        
-        // Continuous urgent flashing while holding - "press me! press me!"
-        if (touchHoldInterval) clearInterval(touchHoldInterval);
-        touchHoldInterval = setInterval(() => {
-          if (isTouchingButton) {
-            burst(4, true); // High density, high frequency, urgent
-          }
-        }, 60); // Very fast - 60ms intervals for urgent feeling
       });
       
       pandaBtn.addEventListener("touchend", () => {
         isTouchingButton = false;
-        if (touchHoldInterval) {
-          clearInterval(touchHoldInterval);
-          touchHoldInterval = null;
-        }
       });
       
       pandaBtn.addEventListener("touchcancel", () => {
         isTouchingButton = false;
-        if (touchHoldInterval) {
-          clearInterval(touchHoldInterval);
-          touchHoldInterval = null;
-        }
       });
       
-      document.addEventListener("touchstart", (e) => {
-        if (e.touches.length === 1) {
-          lastTouchX = e.touches[0].clientX;
-          lastTouchY = e.touches[0].clientY;
-          lastTouchTime = Date.now();
-        }
-      });
-      
+      // Regular touchmove for glint trail (separate from hold detection)
       document.addEventListener("touchmove", (e) => {
         if (e.touches.length !== 1) return;
         
