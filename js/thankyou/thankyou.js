@@ -66,12 +66,10 @@ if (pandaBtn) {
       const spark = document.createElement("div");
       spark.className = "spark";
       
-      // Randomly choose between gold and silver
-      if (Math.random() > 0.5) {
-        spark.classList.add("gold");
-      } else {
-        spark.classList.add("silver");
-      }
+      // Randomly choose from silver/gold/rose gold palette
+      const colors = ['silver', 'gold', 'rose'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      spark.classList.add(randomColor);
       
       // Fast animation when on button
       if (isFast) {
