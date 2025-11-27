@@ -64,11 +64,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let currentIndex = 0;
   const total = slides.length;
+  
+  // Debounce navigation to prevent rapid-fire slide changes
+  let isTransitioning = false;
+  const transitionCooldown = 400; // ms - matches CSS transition duration
 
   function setActive(index) {
     if (!total) return;
-
-    currentIndex = (index + total) % total;
+    if (isTransitioning) return; // Ignore if already transitioning
+    
+    const newIndex = (index + total) % total;
+    if (newIndex === currentIndex) return; // No change needed
+    
+    isTransitioning = true;
+    currentIndex = newIndex;
 
     inner.querySelectorAll(".carousel-slide").forEach((slide) => {
       const idx = Number(slide.dataset.index);
@@ -84,6 +93,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const caption = slides[currentIndex].caption || "";
       captionEl.textContent = caption;
     }
+    
+    // Release lock after transition completes
+    setTimeout(() => {
+      isTransitioning = false;
+    }, transitionCooldown);
   }
 
   function next() {
@@ -185,10 +199,16 @@ document.addEventListener("DOMContentLoaded", () => {
     isDragging = false;
   });
 
-  // Keyboard navigation
+  // Keyboard navigation (with debounce built into setActive)
   document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight") next();
-    if (e.key === "ArrowLeft") prev();
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      next();
+    }
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      prev();
+    }
   });
 
   // Close button
