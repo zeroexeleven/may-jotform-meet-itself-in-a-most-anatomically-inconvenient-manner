@@ -20,7 +20,6 @@
 .summary-page .subtitle {
   margin: 0 0 18px;
   font-weight: 300;
-  font-size: clamp(14px, 3.4vw, 18px);
   text-shadow: var(--text-shadow-strong);
   text-align: center;
 }
