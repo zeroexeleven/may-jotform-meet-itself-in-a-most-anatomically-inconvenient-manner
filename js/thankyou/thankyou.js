@@ -139,43 +139,21 @@ if (pandaBtn) {
       let lastTouchX = 0;
       let lastTouchY = 0;
       let lastTouchTime = 0;
-      let touchMoveHandler = null;
       let touchHoldInterval = null;
       let isTouchingButton = false;
       
-      // Helper to check if touch is in edge/corner zones (reduce glints there)
-      function getEdgeDamping(x, y) {
-        const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight;
-        const edgeMargin = Math.min(screenWidth, screenHeight) * 0.15; // 15% edge zone
-        
-        // Calculate distances from edges
-        const distFromLeft = x;
-        const distFromRight = screenWidth - x;
-        const distFromTop = y;
-        const distFromBottom = screenHeight - y;
-        
-        // Find minimum distance to any edge
-        const minEdgeDist = Math.min(distFromLeft, distFromRight, distFromTop, distFromBottom);
-        
-        // If in edge zone, reduce glints (0 = at edge, 1 = outside edge zone)
-        if (minEdgeDist < edgeMargin) {
-          return minEdgeDist / edgeMargin; // Linear falloff from 0 to 1
-        }
-        return 1; // No damping
-      }
-      
+      // Button touch hold - urgent "press me!" flashing
       pandaBtn.addEventListener("touchstart", (e) => {
         isTouchingButton = true;
-        burst(4, true);
+        burst(5, true); // Initial excited burst
         
-        // Start continuous dense flashing while holding touch
+        // Continuous urgent flashing while holding - "press me! press me!"
         if (touchHoldInterval) clearInterval(touchHoldInterval);
         touchHoldInterval = setInterval(() => {
           if (isTouchingButton) {
-            burst(3, true); // Dense, excited flashing
+            burst(4, true); // High density, high frequency, urgent
           }
-        }, 80); // Flash every 80ms
+        }, 60); // Very fast - 60ms intervals for urgent feeling
       });
       
       pandaBtn.addEventListener("touchend", () => {
@@ -209,53 +187,66 @@ if (pandaBtn) {
         const touch = e.touches[0];
         const timeDiff = now - lastTouchTime;
         
-        // Much lower throttle for highly responsive touch tracking
+        // High frame rate for responsive tracking
         if (timeDiff > 16 && lastTouchTime > 0) { // ~60fps
           const dx = touch.clientX - lastTouchX;
           const dy = touch.clientY - lastTouchY;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          const touchSpeed = distance / timeDiff * 100;
+          const touchDistance = Math.sqrt(dx * dx + dy * dy);
           
-          // Calculate proximity to button - scale for screen size
+          // Calculate distance from touch to button center
           const distanceToButton = getDistanceToButton(touch.clientX, touch.clientY);
-          // Scale max distance based on screen width (smaller screens = shorter range)
+          
+          // Scale range based on screen size
           const screenWidth = window.innerWidth;
-          const maxDistance = Math.min(450, screenWidth * 0.65); // Much tighter range for mobile
-          const proximity = Math.max(0, 1 - (distanceToButton / maxDistance));
+          const screenHeight = window.innerHeight;
+          const screenDiagonal = Math.sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
+          const maxDistance = screenDiagonal * 0.6; // Use diagonal for true perimeter-to-center range
           
+          // Proximity: 0 at perimeter, 1 at button center
+          const proximity = Math.max(0, Math.min(1, 1 - (distanceToButton / maxDistance)));
+          
+          // Radial gradient logic: sparse at perimeter, dense at center
           let glintCount = 0;
-          const isOnButton = proximity > 0.65;
+          let throttleFactor = 1; // How often to show glints (lower = more frequent)
           
-          // More dramatic proximity-based logic for mobile with tighter range
-          if (isOnButton) {
-            // Very close/on button - intense flashing
+          if (proximity > 0.85) {
+            // Very close to button - intense, urgent flashing
             glintCount = 2;
-          } else if (proximity > 0.5) {
-            // Close - very frequent glints
+            throttleFactor = 0.9; // Almost always show
+          } else if (proximity > 0.7) {
+            // Close - high density
             glintCount = 2;
-          } else if (proximity > 0.35) {
-            // Medium distance - noticeable increase
+            throttleFactor = 0.8;
+          } else if (proximity > 0.55) {
+            // Medium-close - frequent
             glintCount = Math.random() > 0.2 ? 2 : 1;
-          } else if (proximity > 0.22) {
-            // Getting farther - moderate
-            glintCount = Math.random() > 0.45 ? 2 : 1;
-          } else if (proximity > 0.12) {
-            // Far away - sparse guidance
-            glintCount = Math.random() > 0.65 ? 1 : 0;
-          } else if (distance > 2) {
-            // Very far - minimal hints
-            glintCount = Math.random() > 0.8 ? 1 : 0;
+            throttleFactor = 0.7;
+          } else if (proximity > 0.4) {
+            // Medium distance - moderate
+            glintCount = Math.random() > 0.4 ? 1 : 2;
+            throttleFactor = 0.6;
+          } else if (proximity > 0.25) {
+            // Medium-far - occasional
+            glintCount = Math.random() > 0.6 ? 1 : 0;
+            throttleFactor = 0.5;
+          } else if (proximity > 0.1) {
+            // Far - sparse
+            glintCount = Math.random() > 0.75 ? 1 : 0;
+            throttleFactor = 0.35;
+          } else {
+            // Perimeter - handful, slow
+            glintCount = Math.random() > 0.88 ? 1 : 0;
+            throttleFactor = 0.2;
           }
           
-          // Apply edge damping - reduce glints at screen edges/corners
-          const edgeDamping = getEdgeDamping(touch.clientX, touch.clientY);
-          if (edgeDamping < 1 && Math.random() > edgeDamping * 0.7) {
-            glintCount = Math.max(0, glintCount - 1);
+          // Apply throttle factor - suppress some glints based on distance
+          if (Math.random() > throttleFactor) {
+            glintCount = 0;
           }
           
-          glintCount = Math.min(2, glintCount);
-          
-          if (glintCount > 0) {
+          // Only show glints if finger is moving
+          if (glintCount > 0 && touchDistance > 1) {
+            const isOnButton = proximity > 0.8;
             burst(glintCount, isOnButton);
           }
         }

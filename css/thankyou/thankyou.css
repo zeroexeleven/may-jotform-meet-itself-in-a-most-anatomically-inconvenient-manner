@@ -73,21 +73,35 @@
   justify-self: end;
 }
 
-/* Portrait / narrow viewports: keep centered stack */
+/* Portrait / narrow viewports: Edit and Panda on row 1, Summary on row 2 */
 @media (max-width: 700px) {
   .thankyou-buttons {
-    grid-template-columns: 1fr;
-    row-gap: 12px;
-    justify-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
   }
 
   .thankyou-buttons .button-stack {
-    order: 2;
+    display: contents; /* Unwrap to place children directly in parent */
+  }
+
+  .thankyou-buttons #editLink {
+    order: 1;
   }
 
   .thankyou-buttons .panda-button {
-    justify-self: center;
-    order: 1;
+    order: 2;
+  }
+
+  .thankyou-buttons #summaryLink {
+    order: 3;
+  }
+
+  /* Row 1: Edit and Panda side by side */
+  #editLink,
+  .panda-button {
+    display: inline-block;
   }
 }
 
