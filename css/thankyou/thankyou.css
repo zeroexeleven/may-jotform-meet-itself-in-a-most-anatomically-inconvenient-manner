@@ -88,19 +88,24 @@
     display: contents; /* Unwrap to place children directly in grid */
   }
 
+  /* Row 1: Edit (col 1) and Panda (col 2) */
   .thankyou-buttons #editLink {
     grid-column: 1;
     grid-row: 1;
+    order: 1;
   }
 
   .thankyou-buttons .panda-button {
     grid-column: 2;
     grid-row: 1;
+    order: 2;
   }
 
+  /* Row 2: Summary centered (spans both columns) */
   .thankyou-buttons #summaryLink {
-    grid-column: 1 / -1; /* Span both columns */
+    grid-column: 1 / -1;
     grid-row: 2;
+    order: 3;
   }
 }
 
