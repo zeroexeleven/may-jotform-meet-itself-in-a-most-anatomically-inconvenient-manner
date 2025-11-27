@@ -262,11 +262,73 @@ document.addEventListener("DOMContentLoaded", () => {
         case "control_wysiwyg":
           // ALL long-text responses are rich text -> always render as HTML
           renderRichTextField(valueDiv, pretty, rawAnswer);
+          
+          // Handle blob URLs in rich text content
+          const images = valueDiv.querySelectorAll('img[src^="blob:"]');
+          images.forEach(img => {
+            const placeholder = document.createElement('div');
+            placeholder.style.cssText = 'padding: 8px; background: rgba(255, 255, 255, 0.03); border-radius: 4px; text-align: center; font-style: italic; font-size: 12px; opacity: 0.6;';
+            placeholder.textContent = 'image not accessible in summary view';
+            img.replaceWith(placeholder);
+          });
           break;
 
         case "control_checkbox":
           if (pretty && hasContent(pretty)) {
             valueDiv.textContent = formatAnswer(pretty);
+          } else {
+            valueDiv.textContent = formatAnswer(rawAnswer);
+          }
+          break;
+
+        case "control_fileupload":
+          // Handle file uploads - JotForm stores these differently
+          if (Array.isArray(rawAnswer) && rawAnswer.length > 0) {
+            rawAnswer.forEach(fileUrl => {
+              if (fileUrl && typeof fileUrl === 'string') {
+                // Check if it's an image
+                const isImage = /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(fileUrl);
+                
+                if (isImage) {
+                  const img = document.createElement('img');
+                  img.src = fileUrl;
+                  img.style.maxWidth = '100%';
+                  img.style.height = 'auto';
+                  img.style.borderRadius = '8px';
+                  img.style.marginTop = '8px';
+                  img.alt = 'Uploaded image';
+                  valueDiv.appendChild(img);
+                } else {
+                  // Non-image file - show as download link
+                  const link = document.createElement('a');
+                  link.href = fileUrl;
+                  link.textContent = fileUrl.split('/').pop() || 'Download file';
+                  link.target = '_blank';
+                  link.style.display = 'block';
+                  link.style.marginTop = '4px';
+                  valueDiv.appendChild(link);
+                }
+              }
+            });
+          } else if (typeof rawAnswer === 'string' && rawAnswer.trim() !== '') {
+            // Single file URL
+            const isImage = /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(rawAnswer);
+            
+            if (isImage) {
+              const img = document.createElement('img');
+              img.src = rawAnswer;
+              img.style.maxWidth = '100%';
+              img.style.height = 'auto';
+              img.style.borderRadius = '8px';
+              img.alt = 'Uploaded image';
+              valueDiv.appendChild(img);
+            } else {
+              const link = document.createElement('a');
+              link.href = rawAnswer;
+              link.textContent = rawAnswer.split('/').pop() || 'Download file';
+              link.target = '_blank';
+              valueDiv.appendChild(link);
+            }
           } else {
             valueDiv.textContent = formatAnswer(rawAnswer);
           }
