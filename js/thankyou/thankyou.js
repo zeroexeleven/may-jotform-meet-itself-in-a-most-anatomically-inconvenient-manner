@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (submissionId && summaryLink) {
-    summaryLink.href = `pages/summary.html?id=${encodeURIComponent(submissionId)}`;
+    summaryLink.href = `summary.html?id=${encodeURIComponent(submissionId)}`;
     
     // Fetch submitter name to personalize page title
     fetchSubmitterName(submissionId);

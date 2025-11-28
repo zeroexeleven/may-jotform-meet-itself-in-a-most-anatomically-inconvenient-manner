@@ -254,9 +254,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const editURL = params.get("edit");
       
       if (editURL) {
-        window.location.href = `../index.html?edit=${encodeURIComponent(editURL)}`;
+        window.location.href = `thankyou.html?edit=${encodeURIComponent(editURL)}`;
       } else {
-        window.location.href = "../index.html";
+        window.location.href = "thankyou.html";
       }
     });
   }

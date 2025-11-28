@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
     closeButton.addEventListener("click", () => {
       if (submissionId) {
         const editURL = `https://submit.jotform.com/edit/${encodeURIComponent(submissionId)}`;
-        window.location.href = `../index.html?edit=${encodeURIComponent(editURL)}`;
+        window.location.href = `thankyou.html?edit=${encodeURIComponent(editURL)}`;
       } else if (window.history.length > 1) {
         history.back();
       } else {
-        window.location.href = "../index.html";
+        window.location.href = "thankyou.html";
       }
     });
   }
