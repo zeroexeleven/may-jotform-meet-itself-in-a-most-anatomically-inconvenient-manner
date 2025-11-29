@@ -10,6 +10,8 @@
   padding: 0 !important;
   margin: 0 !important;
   color-scheme: light dark;
+  forced-color-adjust: none;
+  -webkit-forced-color-adjust: none;
 }
 
 .image-page .image-shell {
@@ -336,7 +338,6 @@
     overscroll-behavior: none !important;
     margin: 0 !important;
     padding: 0 !important;
-    transform: translate3d(0, 0, 0) !important;
   }
 
   .image-page .image-shell {
@@ -348,7 +349,5 @@
     height: 100vh !important;
     height: 100dvh !important;
     margin: 0 !important;
-    transform: translate3d(0, 0, 0) !important;
-    background: rgba(0, 0, 0, 0.7) !important;
   }
 }
