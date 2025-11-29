@@ -3,11 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
   
   if (isMobile) {
-    // Force transparent backgrounds
-    document.documentElement.style.backgroundColor = 'transparent';
-    document.body.style.backgroundColor = 'transparent';
-    document.querySelector('.image-page').style.backgroundColor = 'transparent';
-    
     // Scroll to top first to reset position
     window.scrollTo(0, 0);
     
