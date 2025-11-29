@@ -2,6 +2,16 @@
    IMAGE PAGE + CAROUSEL
    =========================== */
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  overscroll-behavior: none;
+}
+
 body.image-page {
   margin: 0;
   padding: 0;
@@ -10,13 +20,15 @@ body.image-page {
   width: 100%;
   height: 100vh;
   height: 100dvh;
+  overscroll-behavior: none;
+  touch-action: pan-x pinch-zoom;
 }
 
 .image-page {
   height: 100vh;
   height: 100dvh; /* Dynamic viewport height for mobile browsers */
   overflow: hidden;
-  touch-action: none;
+  touch-action: pan-x pinch-zoom;
   -webkit-overflow-scrolling: auto;
   padding: 0 !important;
   margin: 0 !important;
@@ -26,6 +38,8 @@ body.image-page {
   right: 0;
   bottom: 0;
   width: 100%;
+  z-index: 9999;
+  overscroll-behavior: none;
 }
 
 .image-page .image-shell {
@@ -33,7 +47,7 @@ body.image-page {
   height: 100vh;
   height: 100dvh; /* Dynamic viewport height for mobile browsers */
   max-width: none;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.9);
   border-radius: 0;
   border: none;
   padding: 20px;
@@ -51,6 +65,9 @@ body.image-page {
   box-sizing: border-box;
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
+  z-index: 10000;
+  overscroll-behavior: none;
+  touch-action: pan-x pinch-zoom;
 }
 
 @media (max-width: 640px) {
@@ -107,7 +124,7 @@ body.image-page {
   flex: 1;
   min-height: 0;
   background: rgba(0, 0, 0, 0.3);
-  touch-action: none;
+  touch-action: pan-x;
 }
 
 /* Loading spinner */

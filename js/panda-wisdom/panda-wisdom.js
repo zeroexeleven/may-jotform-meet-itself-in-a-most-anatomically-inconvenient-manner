@@ -1,9 +1,44 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Prevent body scroll on page load
+  // Aggressive scroll prevention (but allow horizontal pan for carousel)
+  document.documentElement.style.overflow = 'hidden';
+  document.documentElement.style.position = 'fixed';
+  document.documentElement.style.width = '100%';
+  document.documentElement.style.height = '100%';
+  document.documentElement.style.touchAction = 'pan-x pinch-zoom';
+  
   document.body.style.overflow = 'hidden';
   document.body.style.position = 'fixed';
   document.body.style.width = '100%';
   document.body.style.height = '100%';
+  document.body.style.touchAction = 'pan-x pinch-zoom';
+  document.body.style.overscrollBehavior = 'none';
+  
+  // Prevent vertical scrolling but allow horizontal swipes
+  let startY = 0;
+  document.addEventListener('touchstart', (e) => {
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  
+  document.addEventListener('touchmove', (e) => {
+    const currentY = e.touches[0].clientY;
+    const deltaY = Math.abs(currentY - startY);
+    const deltaX = Math.abs(e.touches[0].clientX - e.touches[0].clientX);
+    
+    // Only prevent if it's primarily vertical movement
+    if (deltaY > 5 && !e.target.closest('.carousel-inner')) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+  
+  // Prevent double-tap zoom
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, false);
   
   // Track loading state
   let firstImageLoaded = false;
