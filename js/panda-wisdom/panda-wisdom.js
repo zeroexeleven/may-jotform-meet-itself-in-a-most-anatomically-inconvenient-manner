@@ -1,20 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Mobile-only: Prevent scroll and zoom
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
-  
-  if (isMobile) {
-    // Debug - check what's being applied
+  // Visual debug overlay - ALWAYS show on mobile
+  if (window.innerWidth <= 768) {
     setTimeout(() => {
       const shell = document.querySelector('.image-shell');
       const body = document.body;
       const html = document.documentElement;
       
-      console.log('Shell BG:', window.getComputedStyle(shell).backgroundColor);
-      console.log('Body BG:', window.getComputedStyle(body).backgroundColor);
-      console.log('HTML BG:', window.getComputedStyle(html).backgroundColor);
-      console.log('Body classes:', body.className);
-    }, 500);
-    
+      const debugDiv = document.createElement('div');
+      debugDiv.style.cssText = 'position: fixed; top: 50%; left: 10px; right: 10px; background: yellow; color: black; padding: 10px; z-index: 99999; font-size: 11px; max-height: 200px; overflow: auto;';
+      debugDiv.innerHTML = `
+        <strong>Debug Info:</strong><br>
+        Shell BG: ${window.getComputedStyle(shell).backgroundColor}<br>
+        Body BG: ${window.getComputedStyle(body).backgroundColor}<br>
+        HTML BG: ${window.getComputedStyle(html).backgroundColor}<br>
+        Body classes: ${body.className}<br>
+        User agent: ${navigator.userAgent.substring(0, 50)}...<br>
+        Width: ${window.innerWidth}
+      `;
+      document.body.appendChild(debugDiv);
+      
+      // Remove after 10 seconds
+      setTimeout(() => debugDiv.remove(), 10000);
+    }, 1000);
+  }
+  
+  // Mobile-only: Prevent scroll and zoom
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  
+  if (isMobile) {
     // Scroll to top first to reset position
     window.scrollTo(0, 0);
     
