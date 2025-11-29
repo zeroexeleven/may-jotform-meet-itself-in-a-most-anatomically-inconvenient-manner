@@ -1,44 +1,55 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Aggressive scroll prevention (but allow horizontal pan for carousel)
-  document.documentElement.style.overflow = 'hidden';
-  document.documentElement.style.position = 'fixed';
-  document.documentElement.style.width = '100%';
-  document.documentElement.style.height = '100%';
-  document.documentElement.style.touchAction = 'pan-x pinch-zoom';
+  // Mobile-only: Prevent scroll and zoom
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
   
-  document.body.style.overflow = 'hidden';
-  document.body.style.position = 'fixed';
-  document.body.style.width = '100%';
-  document.body.style.height = '100%';
-  document.body.style.touchAction = 'pan-x pinch-zoom';
-  document.body.style.overscrollBehavior = 'none';
-  
-  // Prevent vertical scrolling but allow horizontal swipes
-  let startY = 0;
-  document.addEventListener('touchstart', (e) => {
-    startY = e.touches[0].clientY;
-  }, { passive: true });
-  
-  document.addEventListener('touchmove', (e) => {
-    const currentY = e.touches[0].clientY;
-    const deltaY = Math.abs(currentY - startY);
-    const deltaX = Math.abs(e.touches[0].clientX - e.touches[0].clientX);
+  if (isMobile) {
+    // Lock body scroll on mobile
+    document.documentElement.style.position = 'fixed';
+    document.documentElement.style.width = '100%';
+    document.documentElement.style.height = '100%';
+    document.documentElement.style.overflow = 'hidden';
     
-    // Only prevent if it's primarily vertical movement
-    if (deltaY > 5 && !e.target.closest('.carousel-inner')) {
-      e.preventDefault();
-    }
-  }, { passive: false });
-  
-  // Prevent double-tap zoom
-  let lastTouchEnd = 0;
-  document.addEventListener('touchend', (e) => {
-    const now = Date.now();
-    if (now - lastTouchEnd <= 300) {
-      e.preventDefault();
-    }
-    lastTouchEnd = now;
-  }, false);
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+    document.body.style.overflow = 'hidden';
+    
+    // Prevent vertical scroll, allow horizontal swipes in carousel
+    let touchStartY = 0;
+    let touchStartX = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', (e) => {
+      const touchY = e.touches[0].clientY;
+      const touchX = e.touches[0].clientX;
+      const deltaY = Math.abs(touchY - touchStartY);
+      const deltaX = Math.abs(touchX - touchStartX);
+      
+      // If in carousel, only allow horizontal movement
+      if (e.target.closest('.carousel-inner')) {
+        if (deltaY > deltaX) {
+          e.preventDefault(); // Prevent vertical scroll
+        }
+      } else {
+        // Outside carousel, prevent all scrolling
+        e.preventDefault();
+      }
+    }, { passive: false });
+    
+    // Prevent double-tap zoom
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+  }
   
   // Track loading state
   let firstImageLoaded = false;

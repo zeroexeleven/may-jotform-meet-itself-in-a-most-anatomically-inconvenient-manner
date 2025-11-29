@@ -2,91 +2,41 @@
    IMAGE PAGE + CAROUSEL
    =========================== */
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: fixed;
-  overscroll-behavior: none;
-}
-
-body.image-page {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  overscroll-behavior: none;
-  touch-action: pan-x pinch-zoom;
-}
-
 .image-page {
   height: 100vh;
-  height: 100dvh; /* Dynamic viewport height for mobile browsers */
   overflow: hidden;
-  touch-action: pan-x pinch-zoom;
+  touch-action: none;
   -webkit-overflow-scrolling: auto;
   padding: 0 !important;
   margin: 0 !important;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: 9999;
-  overscroll-behavior: none;
 }
 
 .image-page .image-shell {
   width: 100%;
   height: 100vh;
-  height: 100dvh; /* Dynamic viewport height for mobile browsers */
   max-width: none;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 0;
   border: none;
   padding: 20px;
   box-shadow: none;
   text-align: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   box-sizing: border-box;
-  overflow: hidden;
-  -webkit-overflow-scrolling: touch;
-  z-index: 10000;
-  overscroll-behavior: none;
-  touch-action: pan-x pinch-zoom;
 }
 
 @media (max-width: 640px) {
   .image-page .image-shell {
     padding: 16px 12px;
   }
-  
-  .carousel {
-    max-height: 55vh;
-    max-height: 55dvh;
-    min-height: 200px;
-  }
 }
 
 .image-title {
   margin: 0 0 8px 0;
   flex-shrink: 0;
-  width: 100%;
-  padding-top: 0;
 }
 
 @media (max-width: 640px) {
@@ -98,22 +48,18 @@ body.image-page {
 .image-caption {
   font-size: 13px;
   opacity: 0.85;
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
   flex-shrink: 0;
-  width: 100%;
 }
 
 /* Carousel shell */
 
 .carousel {
   position: relative;
-  flex: 0 1 auto;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 200px;
-  max-height: 60vh;
-  max-height: 60dvh;
-  width: 100%;
+  min-height: 0;
 }
 
 .carousel-inner {
@@ -281,6 +227,29 @@ body.image-page {
   }
 }
 
+@media (max-width: 480px) {
+  .carousel-inner {
+    min-height: 220px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide-caption {
+    display: block;
+    min-height: 2.5em;
+    max-height: none;
+    overflow: visible;
+    word-break: break-word;
+    white-space: normal;
+    font-size: 13px;
+    margin-top: 8px;
+    padding: 0 2px;
+    color: #fff;
+    background: none;
+  }
+}
+
 /* Close button at top-right */
 
 .carousel-close {
@@ -315,68 +284,45 @@ body.image-page {
     padding: 12px 10px;
   }
   
-  .carousel {
-    max-height: 50vh;
-    max-height: 50dvh;
-    min-height: 180px;
-  }
-  
-  .carousel-inner {
-    min-height: 180px;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
   .carousel-close {
     font-size: 22px;
   }
-  
-  .slide-caption {
-    display: block;
-    min-height: 2.5em;
-    max-height: none;
-    overflow: visible;
-    word-break: break-word;
-    white-space: normal;
-    font-size: 12px;
-    margin-top: 8px;
-    padding: 0 2px;
-    color: #fff;
-    background: none;
-  }
 }
 
-/* Landscape orientation adjustments */
-@media (max-height: 500px) and (orientation: landscape) {
+/* ===========================
+   MOBILE-SPECIFIC FIXES
+   =========================== */
+
+/* Prevent page scroll/zoom on mobile Safari/Chrome */
+@media (max-width: 768px) {
+  html {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+  
+  body {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior: none;
+  }
+  
+  .image-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    height: 100dvh;
+    overscroll-behavior: none;
+  }
+  
   .image-page .image-shell {
-    padding: 8px 12px;
-  }
-  
-  .image-title {
-    font-size: clamp(18px, 4vw, 24px);
-    margin-bottom: 4px;
-  }
-  
-  .image-caption {
-    font-size: 11px;
-    margin-bottom: 8px;
-  }
-  
-  .carousel {
-    max-height: 50vh;
-    max-height: 50dvh;
-    min-height: 140px;
-  }
-  
-  .carousel-dots {
-    margin-top: 6px;
-  }
-  
-  .slide-caption {
-    font-size: 11px;
-    margin-top: 6px;
-    min-height: 2em;
+    height: 100vh;
+    height: 100dvh;
   }
 }
