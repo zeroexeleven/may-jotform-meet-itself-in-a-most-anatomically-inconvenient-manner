@@ -143,6 +143,18 @@
   color: #d0d5d2;
 }
 
+/* Images in answers */
+.q-value img {
+  max-width: 100% !important;
+  max-height: 400px !important;
+  height: auto !important;
+  display: block !important;
+  margin: 8px 0 !important;
+  border-radius: 6px !important;
+  object-fit: contain !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
 /* Tables inside summary – dark theme, responsive */
 
 .answers table {
@@ -195,6 +207,22 @@
   opacity: 0.8;
 }
 
+/* Button layout */
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.actions .btn {
+  flex: 1;
+  min-width: 140px;
+  max-width: 220px;
+  font-size: 14px;
+}
+
 /* ===========================
    SMALL DEVICES
    =========================== */
@@ -202,5 +230,10 @@
 @media (max-width: 480px) {
   .summary-page .shell {
     padding: 16px 12px 20px;
+  }
+  
+  .actions .btn {
+    font-size: 13px;
+    padding: 10px 12px;
   }
 }
