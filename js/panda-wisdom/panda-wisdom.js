@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Prevent body scroll on page load
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
+  document.body.style.height = '100%';
+  
   // Track loading state
   let firstImageLoaded = false;
   
@@ -33,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // {
     //   src: "https://raw.githubusercontent.com/.../images/another_page.jpeg",
     //   alt: "Photograph of another page from a book by James Norbury",
-    //   caption: "Another page from James Norbury’s book."
+    //   caption: "Another page from James Norbury's book."
     // }
   ];
 
