@@ -1,29 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Visual debug overlay - ALWAYS show on mobile
-  if (window.innerWidth <= 768) {
-    setTimeout(() => {
-      const shell = document.querySelector('.image-shell');
-      const body = document.body;
-      const html = document.documentElement;
-      
-      const debugDiv = document.createElement('div');
-      debugDiv.style.cssText = 'position: fixed; top: 50%; left: 10px; right: 10px; background: yellow; color: black; padding: 10px; z-index: 99999; font-size: 11px; max-height: 200px; overflow: auto;';
-      debugDiv.innerHTML = `
-        <strong>Debug Info:</strong><br>
-        Shell BG: ${window.getComputedStyle(shell).backgroundColor}<br>
-        Body BG: ${window.getComputedStyle(body).backgroundColor}<br>
-        HTML BG: ${window.getComputedStyle(html).backgroundColor}<br>
-        Body classes: ${body.className}<br>
-        User agent: ${navigator.userAgent.substring(0, 50)}...<br>
-        Width: ${window.innerWidth}
-      `;
-      document.body.appendChild(debugDiv);
-      
-      // Remove after 10 seconds
-      setTimeout(() => debugDiv.remove(), 10000);
-    }, 1000);
-  }
-  
   // Mobile-only: Prevent scroll and zoom
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
   
@@ -31,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Scroll to top first to reset position
     window.scrollTo(0, 0);
     
-    // Lock body scroll on mobile - DON'T touch backgrounds, let CSS handle it
+    // Lock body scroll on mobile
     document.documentElement.style.position = 'fixed';
     document.documentElement.style.width = '100%';
     document.documentElement.style.height = '100%';
@@ -125,12 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
       alt: "Photograph of a page from a book by James Norbury on the importance of seeing beyond words.",
       caption: "The importance of understanding beyond words, beyond thoughts, beyond... you get the idea."
     }
-    // Add more like:
-    // {
-    //   src: "https://raw.githubusercontent.com/.../images/another_page.jpeg",
-    //   alt: "Photograph of another page from a book by James Norbury",
-    //   caption: "Another page from James Norbury's book."
-    // }
   ];
 
   const inner = document.getElementById("carouselInner");
