@@ -10,6 +10,11 @@
                         0 0 12px rgba(0, 0, 0, 0.7);
 }
 
+html {
+  forced-color-adjust: none;
+  -webkit-forced-color-adjust: none;
+}
+
 * {
   box-sizing: border-box;
 }
