@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Scroll to top first to reset position
     window.scrollTo(0, 0);
     
-    // Lock body scroll on mobile
+    // Lock body scroll on mobile - DON'T touch backgrounds, let CSS handle it
     document.documentElement.style.position = 'fixed';
     document.documentElement.style.width = '100%';
     document.documentElement.style.height = '100%';
@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = 'hidden';
     document.body.style.top = '0';
     document.body.style.left = '0';
-    document.body.style.backgroundColor = 'transparent';
     
     // Force scroll lock continuously
     const lockScroll = () => {
