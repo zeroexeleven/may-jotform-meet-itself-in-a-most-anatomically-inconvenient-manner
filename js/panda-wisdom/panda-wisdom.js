@@ -2,25 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Mobile-only: Prevent scroll and zoom
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
   
-  // Debug info overlay
-  const debugDiv = document.createElement('div');
-  debugDiv.style.cssText = 'position: fixed; top: 50%; left: 10px; background: yellow; color: black; padding: 10px; z-index: 99999; font-size: 11px; max-width: 300px;';
-  const shell = document.querySelector('.image-shell');
-  const computedStyle = shell ? window.getComputedStyle(shell) : null;
-  debugDiv.innerHTML = `
-    <strong>Debug Info:</strong><br>
-    isMobile: ${isMobile}<br>
-    Width: ${window.innerWidth}<br>
-    Shell BG: ${computedStyle ? computedStyle.backgroundColor : 'N/A'}<br>
-    Body BG: ${window.getComputedStyle(document.body).backgroundColor}<br>
-    HTML BG: ${window.getComputedStyle(document.documentElement).backgroundColor}
-  `;
-  document.body.appendChild(debugDiv);
-  
-  // Remove debug after 5 seconds
-  setTimeout(() => debugDiv.remove(), 5000);
-  
   if (isMobile) {
+    // Force transparent backgrounds
+    document.documentElement.style.backgroundColor = 'transparent';
+    document.body.style.backgroundColor = 'transparent';
+    document.querySelector('.image-page').style.backgroundColor = 'transparent';
+    
     // Scroll to top first to reset position
     window.scrollTo(0, 0);
     
