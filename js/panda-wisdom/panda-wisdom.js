@@ -3,6 +3,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
   
   if (isMobile) {
+    // Debug - check what's being applied
+    setTimeout(() => {
+      const shell = document.querySelector('.image-shell');
+      const body = document.body;
+      const html = document.documentElement;
+      
+      console.log('Shell BG:', window.getComputedStyle(shell).backgroundColor);
+      console.log('Body BG:', window.getComputedStyle(body).backgroundColor);
+      console.log('HTML BG:', window.getComputedStyle(html).backgroundColor);
+      console.log('Body classes:', body.className);
+    }, 500);
+    
     // Scroll to top first to reset position
     window.scrollTo(0, 0);
     
@@ -20,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = 'hidden';
     document.body.style.top = '0';
     document.body.style.left = '0';
+    document.body.style.backgroundColor = 'transparent';
     
     // Force scroll lock continuously
     const lockScroll = () => {
